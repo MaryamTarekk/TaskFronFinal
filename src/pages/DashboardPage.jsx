@@ -4,6 +4,8 @@ import {
   PRIORITY_WEIGHT,
   LOW_STOCK_LIMIT,
   MAX_HISTORY,
+  CATEGORIES,
+  PRIORITIES,
 } from '../constants/taskConstants.js';
 import { useDebounce } from '../hooks/useDebounce.js';
 import { useUrlSync } from '../hooks/useUrlSync.js';
@@ -18,12 +20,26 @@ import TaskTable from '../components/TaskTable.jsx';
 
 const cloneTasks = (items) => items.map((task) => ({ ...task }));
 
+const getInitialParam = (key, fallback) => {
+  try {
+    return new URLSearchParams(window.location.search).get(key) || fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [selectedTaskIds, setSelectedTaskIds] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [priorityFilter, setPriorityFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState(() => getInitialParam('q', ''));
+  const [categoryFilter, setCategoryFilter] = useState(() => {
+    const val = getInitialParam('category', 'All');
+    return CATEGORIES.includes(val) ? val : 'All';
+  });
+  const [priorityFilter, setPriorityFilter] = useState(() => {
+    const val = getInitialParam('priority', 'All');
+    return PRIORITIES.includes(val) ? val : 'All';
+  });
   const [isSearching, setIsSearching] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isProcessingBulk, setIsProcessingBulk] = useState(false);
@@ -230,6 +246,13 @@ export default function DashboardPage() {
     setSelectedTaskIds([]);
   }, []);
 
+  // Reset all search and filter criteria to defaults
+  const handleResetFilters = useCallback(() => {
+    setSearchQuery('');
+    setCategoryFilter('All');
+    setPriorityFilter('All');
+  }, []);
+
   // Handle stock change with instant numerical sanitization and server synchronization
   const handleStockChange = useCallback((taskId, value) => {
     const parsedStock = Math.max(0, parseInt(value, 10) || 0);
@@ -407,6 +430,7 @@ export default function DashboardPage() {
         priorityFilter={priorityFilter}
         onPriorityChange={setPriorityFilter}
         isSearching={isSearching}
+        onResetFilters={handleResetFilters}
       />
 
       <BulkActionBar
@@ -429,6 +453,8 @@ export default function DashboardPage() {
         onStockChange={handleStockChange}
         onNoteChange={handleNoteChange}
         isSearching={isSearching}
+        hasActiveFilters={searchQuery.trim() !== '' || categoryFilter !== 'All' || priorityFilter !== 'All'}
+        onResetFilters={handleResetFilters}
       />
     </div>
   );

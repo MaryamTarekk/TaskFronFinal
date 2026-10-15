@@ -10,13 +10,19 @@ export default function TaskTable({
   onStockChange,
   onNoteChange,
   isSearching,
+  hasActiveFilters,
+  onResetFilters,
 }) {
   const masterCheckboxRef = useRef(null);
 
   const visibleCount = tasks.length;
-  const visibleSelectedCount = tasks.filter((t) => selectedTaskIds.includes(t.id)).length;
-  const isAllVisibleSelected = visibleCount > 0 && visibleSelectedCount === visibleCount;
-  const isPartiallySelected = visibleSelectedCount > 0 && visibleSelectedCount < visibleCount;
+  const visibleSelectedCount = tasks.filter((t) =>
+    selectedTaskIds.includes(t.id)
+  ).length;
+  const isAllVisibleSelected =
+    visibleCount > 0 && visibleSelectedCount === visibleCount;
+  const isPartiallySelected =
+    visibleSelectedCount > 0 && visibleSelectedCount < visibleCount;
 
   // Handle indeterminate checkbox state via DOM property
   useEffect(() => {
@@ -45,7 +51,11 @@ export default function TaskTable({
                 checked={isAllVisibleSelected}
                 onChange={handleMasterCheckboxChange}
                 aria-label="Select or deselect all visible tasks"
-                title={isAllVisibleSelected ? 'Deselect all visible' : 'Select all visible'}
+                title={
+                  isAllVisibleSelected
+                    ? 'Deselect all visible'
+                    : 'Select all visible'
+                }
               />
             </th>
             <th>Task ID</th>
@@ -72,13 +82,32 @@ export default function TaskTable({
             <tr>
               <td colSpan="8" className="empty">
                 <div className="empty-state">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     <line x1="8" y1="11" x2="14" y2="11"></line>
                   </svg>
                   <p className="strong">No tasks found</p>
-                  <p className="muted small">No tasks match your current search query or filter criteria.</p>
+                  <p className="muted small">
+                    No tasks match your current search query or active category/priority filters.
+                  </p>
+                  {hasActiveFilters && onResetFilters && (
+                    <button
+                      type="button"
+                      className="btn ghost sm"
+                      onClick={onResetFilters}
+                      style={{ marginTop: '8px' }}
+                    >
+                      Clear search &amp; filters
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>

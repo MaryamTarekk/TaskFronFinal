@@ -367,22 +367,29 @@ h1 {
 
 /* =========================================================
    TOOLBAR & FILTERS
+/* =========================================================
+   TOOLBAR, SEARCH BOX & CATEGORY PILLS
 ========================================================= */
 .toolbar {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.toolbar-top {
+  display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  width: 100%;
   flex-wrap: wrap;
 }
 
-.search {
+.search-box {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
   flex: 1;
   min-width: 280px;
-  position: relative;
 }
 
 .search-icon {
@@ -390,65 +397,170 @@ h1 {
   left: 12px;
   color: var(--muted);
   pointer-events: none;
+  z-index: 2;
 }
 
-.search input {
-  flex: 1;
-  padding-left: 36px;
-  padding-right: 32px;
+.search-box input {
+  width: 100%;
+  padding-left: 38px;
+  padding-right: 54px; /* enough space for spinner + clear button without text overlap */
+}
+
+.search-box-end {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.search-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.spinner-mini {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(109, 124, 255, 0.25);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
 }
 
 .clear-search-btn {
-  position: absolute;
-  right: 10px;
-  background: none;
+  background: rgba(255, 255, 255, 0.08);
   border: none;
   color: var(--muted);
-  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 0 4px;
+  padding: 0;
   line-height: 1;
-  transition: color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .clear-search-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
   color: #fff;
 }
 
-.querying {
-  color: var(--accent);
-  font-size: 12px;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.spinner-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulseDot 0.8s ease-in-out infinite alternate;
-}
-
-@keyframes pulseDot {
-  0% { transform: scale(0.7); opacity: 0.4; }
-  100% { transform: scale(1.3); opacity: 1; }
-}
-
-.filters {
+.priority-select-wrap {
   display: flex;
-  gap: 16px;
+  align-items: center;
 }
 
-.filters label {
+.filter-label {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 12px;
   color: var(--muted);
   font-weight: 500;
+  white-space: nowrap;
+}
+
+.toolbar-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid rgba(34, 44, 71, 0.5);
+}
+
+.category-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-group-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.category-pill {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.category-pill:hover {
+  background: rgba(109, 124, 255, 0.08);
+  color: var(--text);
+  border-color: rgba(109, 124, 255, 0.35);
+}
+
+.category-pill.active {
+  background: rgba(109, 124, 255, 0.2);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(109, 124, 255, 0.3);
+  font-weight: 600;
+}
+
+.category-pill.active.cat-inventory {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  color: #bae6fd;
+}
+
+.category-pill.active.cat-hardware {
+  background: rgba(168, 85, 247, 0.18);
+  border-color: #a855f7;
+  color: #e9d5ff;
+}
+
+.category-pill.active.cat-maintenance {
+  background: rgba(251, 191, 36, 0.18);
+  border-color: #fbbf24;
+  color: #fef08a;
+}
+
+.active-filters-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-reset-filters {
+  background: rgba(251, 113, 133, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.3);
+  color: var(--danger);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-reset-filters:hover {
+  background: rgba(251, 113, 133, 0.2);
+  color: #fff;
 }
 
 input[type='text'],
@@ -741,31 +853,45 @@ tbody td {
   }
 
   .toolbar {
-    flex-direction: column;
-    align-items: stretch;
     gap: 12px;
   }
 
-  .search {
+  .toolbar-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-box {
     min-width: 0;
     width: 100%;
   }
 
-  .filters {
+  .priority-select-wrap {
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-label {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filter-label select {
+    flex: 1;
+  }
+
+  .toolbar-bottom {
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
 
-  .filters label {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+  .category-pills {
     width: 100%;
   }
 
-  .filters select {
+  .active-filters-info {
+    justify-content: space-between;
     width: 100%;
   }
 
@@ -821,6 +947,22 @@ tbody td {
     grid-column: span 1;
   }
 
+  .category-pills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .filter-group-title {
+    grid-column: span 2;
+    margin-bottom: 2px;
+  }
+
+  .category-pill {
+    text-align: center;
+    padding: 6px 10px;
+  }
+
   .grid-4 {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -832,10 +974,6 @@ tbody td {
 
   .stat .big {
     font-size: 24px;
-  }
-
-  .filters {
-    grid-template-columns: 1fr;
   }
 
   .bulkbar .actions {
