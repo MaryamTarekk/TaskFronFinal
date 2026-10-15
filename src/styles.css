@@ -26,6 +26,7 @@ body {
   background: radial-gradient(1200px 600px at 10% -10%, #1b2250 0%, var(--bg) 55%);
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -507,15 +508,36 @@ input[type='checkbox'] {
 
 /* =========================================================
    TABLE & ROWS
-========================================================= */
 .table-wrap {
   padding: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+/* Custom sleek scrollbar for smooth horizontal scrolling on mobile/tablet */
+.table-wrap::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+  background: rgba(11, 16, 32, 0.6);
+  border-radius: 4px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 table {
   width: 100%;
+  min-width: 780px;
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -668,38 +690,160 @@ tbody td {
 }
 
 /* =========================================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN (Tablets & Mobile)
 ========================================================= */
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
+  .app {
+    padding: 24px 20px 48px;
+  }
+
   .grid-3 {
     grid-template-columns: 1fr;
   }
+
   .grid-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-  .toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .filters {
-    justify-content: space-between;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 600px) {
-  .grid-4 {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .app {
+    padding: 16px 14px 40px;
+    gap: 14px;
   }
+
   .topbar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 14px;
+    padding-bottom: 16px;
   }
+
+  .topbar-info h1 {
+    font-size: 22px;
+  }
+
   .actions {
     width: 100%;
-    justify-content: stretch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
+
+  .actions #btn-reverse {
+    grid-column: span 2;
+  }
+
   .actions .btn {
-    flex: 1;
     justify-content: center;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .search {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .filters {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .filters label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+
+  .bulkbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .bulkbar-info {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .bulkbar .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .bulkbar .actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .autosave-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 12px 10px 32px;
+    gap: 12px;
+  }
+
+  .topbar-info h1 {
+    font-size: 19px;
+  }
+
+  .topbar-info p {
+    font-size: 12px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .actions #btn-reverse {
+    grid-column: span 1;
+  }
+
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat {
+    padding: 12px 14px;
+  }
+
+  .stat .big {
+    font-size: 24px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .bulkbar .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .payload {
+    max-height: 110px;
+    font-size: 10.5px;
   }
 }
